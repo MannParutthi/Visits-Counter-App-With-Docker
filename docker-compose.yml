@@ -1,0 +1,35 @@
+# Contains commands which we normally write in the Docker CLI using some special syntax in a YAML file
+# Docker Compose : To automate the process of writing commands in the Docker CLI
+# Docker CLI : Takes Docker Compose file as input and it parses the file and executes the commands in the terminal
+# Can be used to start multiple containers at the same time
+
+# Run the following command in the directory where the docker-compose.yml file is present
+# docker-compose up --build => builds the image and then starts up all the containers (docker build . && docker run myimage)
+# docker-compose up => starts up all the containers (docker run myimage)
+# docker-compose up -d => starts up all the containers in the background
+# docker-compose down => stops all the containers
+# docker-compose ps => lists all the running containers (created using this docker-compose file) and their status
+
+version: '3'
+
+services:
+# redis-server => 1st container / service
+# Make it using the 'redis' image
+  redis-server:
+    image: 'redis'
+
+# node-app => 2nd container / service
+# Make it using the Dockerfile in the current directory
+# Map port 8081 of local machine to 8081 of container (- in a yml file => it means value of an array) (local machine to container mapping)
+  node-app:
+    restart: always
+    build: .
+    ports:
+      - "4001:8081"
+
+
+# restart policies (restart: no/always/on-failure/unless-stopped)
+# "no" => never attempt to restart this container if it stops or crashes (default) (no inside quotes => in yml file, no is a keyword {false})
+# always => always attempt to restart this container if it stops or crashes
+# on-failure => only restart if the container stops with an error code
+# unless-stopped => always restart unless we forcibly stop it (docker container stop <container id> => forcibly stop)
